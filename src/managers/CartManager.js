@@ -10,7 +10,7 @@ class CartManager {
 
     async getCarts() {
         try {
-            return await cartService.getCarts();
+            return res.status(200).json({ message: "Carts retrieved successfully", carts: await cartService.getCarts() });
         } catch (error) {
             res.status(500).json({ message: "Error while finding carts", details: error.message });
         }
@@ -23,7 +23,7 @@ class CartManager {
             if (!cart) {
                 res.status(404).json({ message: "Cart not found"});
             } else {
-                return cart;
+                return res.status(200).json({ message: "Cart retrieved successfully", cart });
             }
         } catch (error) {
             res.status(500).json({ message: "Error while finding cart", details: error.message });
@@ -37,7 +37,7 @@ class CartManager {
             if (!cart) {
                 res.status(404).json({ message: "Cart not found"});
             } else {
-                return cart.products;
+                return res.status(200).json({ message: "Products retrieved successfully", products: cart.products });
             }
         } catch (error) {
             res.status(500).json({ message: "Error while getting products", details: error.message });
@@ -46,7 +46,7 @@ class CartManager {
 
     async addCart() {
         try {
-            return await cartService.addCart();
+            return res.status(201).json({ message: "Cart added successfully", cart: await cartService.addCart() });
         } catch (error) {
             res.status(500).json({ message: "Error while adding cart", details: error.message });
         }
@@ -136,6 +136,7 @@ class CartManager {
             const index = cart.products.findIndex(product => product.product === pid);
             cart.products.splice(index, 1);
             await cart.save();
+            return await res.status(200).json({ message: "Product deleted successfully", cart });
         } catch (error) {
             res.status(500).json({ message: "Error while deleting product", details: error.message });
         }

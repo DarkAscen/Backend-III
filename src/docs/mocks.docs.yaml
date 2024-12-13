@@ -1,0 +1,91 @@
+components:
+  responses:
+    res201_users:
+          description: "User mocks created successfully."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Users created successfully."
+    res201_products:
+      description: "Products created successfully."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: "Confirmation message."
+          example:
+            message: "Products created successfully."
+    res400:
+      description: "Incorrect input parameters."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: "Error message explaining the issue."
+          example:
+            message: "Element must be a number" 
+    res500:
+      description: "Server error."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statuscode:
+                type: number
+          example:
+            message: SERVER ERROR
+            statuscode: 500
+
+paths:
+  paths:
+  /api/mocks/users/{n}:
+    get:
+      summary: Generate mock users
+      tags:
+        - Mock
+      parameters:
+        - in: path
+          name: n
+          required: true
+          schema:
+            type: integer
+            description: Number of mock users to generate
+      responses:
+        201:
+          $ref: '#/components/responses/res201_users'
+        400:
+          $ref: '#/components/responses/res400'
+        500:
+          $ref: '#/components/responses/res500'
+  /api/mocks/products/{n}:
+    get:
+      summary: Generate mock products
+      tags:
+        - Mock
+      parameters:
+        - in: path
+          name: n
+          required: true
+          schema:
+            type: integer
+            description: Number of mock products to generate
+      responses:
+        201:
+          $ref: '#/components/responses/res201_products'
+        400:
+          $ref: '#/components/responses/res400'
+        500:
+          $ref: '#/components/responses/res500'

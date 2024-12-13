@@ -5,7 +5,9 @@ import { cartDto } from "../dtos/cart.dto.js";
 
 const router = Router();
 
-router.get("/:cid", cartManager.getCarts);
+router.get("/", cartManager.getCarts);
+
+router.get("/:cid", cartManager.getCartById);
 
 router.post("/", cartManager.addCart);
 

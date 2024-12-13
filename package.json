@@ -6,13 +6,22 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "image": "docker build -t backend_iii .",
+    "container": "docker run -p 8080:8080 backend_iii",
+    "rename": "docker tag backend_iii darkascen/backend_iii:latest",
+    "push": "docker push darkascen/backend_iii:latest",
+    "manifest": "kubectl apply -f ./mini.yaml",
+    "supertest": "mocha ./src/test/supertest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "chai": "^5.1.2",
+    "mocha": "^11.0.1",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.0.0"
   },
   "dependencies": {
     "@types/express": "^5.0.0",
@@ -34,6 +43,9 @@
     "passport-local": "^1.0.0",
     "semver": "^7.6.3",
     "socket.io": "^4.8.1",
-    "uuid": "^11.0.2"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.0.2",
+    "winston": "^3.17.0"
   }
 }

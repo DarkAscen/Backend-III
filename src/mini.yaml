@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend_iii
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: backend_iii
+    template:
+      metadata:
+        labels:
+          app: backend_iii
+      spec: 
+        containers:
+          - name: backend_iii
+            image: darkascen/backend_iii:latest
+            ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: backend_iii-service
+spec:
+  selector:
+    app: backend_iii
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

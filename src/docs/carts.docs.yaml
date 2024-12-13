@@ -1,0 +1,365 @@
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                format: objectId
+                description: Product ID
+              quantity:
+                type: number
+                description: Quantity of the product
+          description: List of products in the cart
+      example:
+        products:
+          - product: 62f5cbe5c28a456f1e93d645
+            quantity: 2
+          - product: 62f5cbe5c28a456f1e93d646
+            quantity: 1
+  responses:
+    res200:
+      type: object
+      properties:
+        message: 
+          type: string
+          description: Message for the cart operation
+      example:
+        message: CART OPERATION SUCCESSFUL
+        response: 
+          products:
+            - product: 62f5cbe5c28a456f1e93d645
+              quantity: 2
+            - product: 62f5cbe5c28a456f1e93d646
+              quantity: 1
+    res201:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Cart created successfully
+        response:
+          $ref: '#/components/schemas/Cart'
+      example:
+        message: CART CREATED
+        response:
+          products:
+            - product: 62f5cbe5c28a456f1e93d645
+              quantity: 2
+            - product: 62f5cbe5c28a456f1e93d646
+              quantity: 1
+    res404:
+      type: object
+      properties: 
+        message:
+          type: string
+          description: Cart not found
+        statuscode:
+          type: number
+          description: Status code for the operation
+      example:
+        message: CART NOT FOUND
+        statuscode: 404
+    res500:
+      type: object
+      properties: 
+        message:
+          type: string
+          description: Message for a server error
+        statuscode:
+          type: number
+          description: Status code for the operation
+      example:
+        message: SERVER ERROR
+        statuscode: 500
+paths:
+  /api/carts:
+    post: 
+      summary: Create a new cart
+      tags:
+        - Cart
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '201':
+          description: Cart created successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res201'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+  /api/carts/{cid}:
+    get:
+      summary: Get a cart by ID
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      responses:
+        '200':
+          description: Cart retrieved successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    put:
+      summary: Update products in a cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '200':
+          description: Cart updated successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    delete:
+      summary: Delete all products from a cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      responses:
+        '200':
+          description: Cart cleared successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Add a product to a cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+                  description: Quantity of the product
+              required:
+                - quantity
+      responses:
+        '200':
+          description: Product added successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart or product not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    put:
+      summary: Update the quantity of a product in a cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+                  description: New quantity of the product
+              required:
+                - quantity
+      responses:
+        '200':
+          description: Product quantity updated successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart or product not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    delete:
+      summary: Remove a product from a cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '200':
+          description: Product removed successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart or product not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Purchase all items in a cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      responses:
+        '200':
+          description: Purchase completed successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Cart not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'

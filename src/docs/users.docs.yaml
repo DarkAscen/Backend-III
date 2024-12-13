@@ -1,0 +1,293 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        first_name: 
+          type: string
+          description: User's first name
+        last_name: 
+          type: string
+          description: User's last name
+        age: 
+          type: number
+          description: User's age
+        email: 
+          type: string
+          format: email
+          description: User's email
+        password: 
+          type: string
+          format: password
+          description: User's password
+        carts: 
+          type: array
+          items: 
+            type: string
+            format: objectId
+          description: User's carts
+        role: 
+          type: string
+          description: User's role
+      example: 
+        first_name: Mario
+        last_name: Belta
+        age: 42
+        email: mariobelta82@gmail.com
+        password: marioXbelta070482
+        carts: 
+          - 5f6b3a5c4d5e4f5a4e6f
+        role: user
+  responses:
+    res200:
+      type: object
+      properties:
+        message: 
+          type: string
+          description: Message for the user read
+      example:
+        message: USER READ
+        response: 
+          first_name: Mario
+          last_name: Belta
+          age: 42
+          email: mariobelta82@gmail.com
+          password: marioXbelta070482
+          carts: 
+            - 5f6b3a5c4d5e4f5a4e6f
+          role: user
+    res200s: 
+      type: object 
+      properties:
+        message:
+          type: string
+          description: Message for users read
+      example:
+        message: USERS READ
+        response: 
+          - first_name: Mario
+            last_name: Belta
+            age: 42
+            email: mariobelta82@gmail.com
+            password: marioXbelta070482
+            carts: 5f6b3a5c4d5e4f5a4e6f
+            role: user
+          - first_name: Mario
+            last_name: Belta
+            age: 42
+            email: mariobelta82@gmail.com
+            password: marioXbelta070482
+            carts: 5f6b3a5c4d5e4f5a4e6f
+            role: user
+    res201:
+      type: object
+      properties:
+        response:
+          first_name: 
+            type: string
+            description: User's first name
+          last_name: 
+            type: string
+            description: User's last name
+          age: 
+            type: number
+            description: User's age
+          email: 
+            type: string
+            format: email
+            description: User's email
+          password: 
+            type: string
+            format: password
+            description: User's password
+          carts: 
+            type: array
+            items: 
+              type: string
+              format: objectId
+            description: User's carts
+          role: 
+            type: string
+            description: User's role
+        message:
+          type: string
+          description: Message for the user creation
+      example:
+        response:
+          first_name: Mario
+          last_name: Belta
+          age: 42
+          email: mariobelta82@gmail.com
+          password: marioXbelta070482
+          carts: 5f6b3a5c4d5e4f5a4e6f
+          role: user
+        message: USER CREATED
+    res404:
+      type: object
+      properties: 
+        message:
+          type: string
+          description: Message for the user not found
+        statuscode:
+          type: number
+          description: Status code for the operation number
+      example:
+        message: USER NOT FOUND
+        statuscode: 404
+    res500:
+      type: object
+      properties: 
+        message:
+          type: string
+          description: Message for a server's error
+        statuscode:
+          type: number
+          description: Status code for the operation number
+      example:
+        message: SERVER ERROR
+        statuscode: 500
+paths:
+  /api/users:
+    post: 
+      summary: Add a new user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User creation successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res201'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    get: 
+      summary: Get all users
+      tags:
+        - User
+      responses:
+        '200':
+          description: Users read successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200s'
+        '404':
+          description: User not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+  /api/users/{uid}:
+    get: 
+      summary: Get a user by id
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: User id
+      responses:
+        '200':
+          description: User read successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: User not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    put:
+      summary: Update a user by id
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: User id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User update successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: User not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    delete:
+      summary: Delete a user by id
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: User id
+      responses:
+        '200':
+          description: User deletion successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: User not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'

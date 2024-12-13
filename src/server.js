@@ -6,6 +6,8 @@ import session from "express-session";
 import path from "path"
 import passport from "passport";
 import errorMiddleware from "./middlewares/error.middleware.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import { serve, setup } from "swagger-ui-express";
 
 import routes from "./routes/index.js";
 import viewsRoutes from "./routes/views.routes.js";
@@ -14,6 +16,7 @@ import __dirname from "./dirname.js";
 import MongoStore from "connect-mongo";
 import { productModel } from "./models/product.model.js";
 import { initializePassport } from "./config/passport.config.js";
+import opts from "./utils/swagger.util.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -69,6 +72,9 @@ const httpServer = app.listen(PORT, () => {
 const io = new Server(httpServer);
 
 let products = await productModel.find();
+
+const specs = swaggerJSDoc(opts);
+app.use("/api/docs", serve, setup(specs));
 
 io.on("connection", async (socket) => {
     console.log("Socket connection established");

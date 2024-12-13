@@ -1,0 +1,229 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description
+        code:
+          type: string
+          description: Product unique code
+        price:
+          type: number
+          description: Product price
+        status:
+          type: boolean
+          description: Product status (available or not)
+        stock:
+          type: number
+          description: Available stock for the product
+        category:
+          type: string
+          description: Product category
+      example:
+        title: title 1
+        description: description 1
+        code: code 1
+        price: 800
+        status: true
+        stock: 20
+        category: category 1
+  responses:
+    res200:
+      type: object
+      properties:
+        message: 
+          type: string
+          description: Message for the operation
+      example:
+        message: OPERATION SUCCESSFUL
+        response: 
+          data:
+            - id: 62f5cbe5c28a456f1e93d645
+              title: title 1
+              price: 800
+    res201:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Resource created successfully
+        response:
+          $ref: '#/components/schemas/Product'
+      example:
+        message: PRODUCT CREATED
+        response:
+          title: title 1
+          description: description 1
+          code: code 1
+          price: 800
+          status: true
+          stock: 20
+          category: category 1
+    res404:
+      type: object
+      properties: 
+        message:
+          type: string
+          description: Resource not found
+        statuscode:
+          type: number
+          description: Status code for the operation
+      example:
+        message: RESOURCE NOT FOUND
+        statuscode: 404
+    res500:
+      type: object
+      properties: 
+        message:
+          type: string
+          description: Message for a server error
+        statuscode:
+          type: number
+          description: Status code for the operation
+      example:
+        message: SERVER ERROR
+        statuscode: 500
+paths:
+  /api/products:
+    get:
+      summary: Retrieve all products
+      tags:
+        - Product
+      responses:
+        '200':
+          description: Products retrieved successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    post:
+      summary: Create a new product
+      tags:
+        - Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res201'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+  /api/products/{pid}:
+    get:
+      summary: Retrieve a product by ID
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Product not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    put:
+      summary: Update a product by ID
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Product not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'
+    delete:
+      summary: Delete a product by ID
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '200':
+          description: Product deleted successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res200'
+        '404':
+          description: Product not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res404'
+        '500':
+          description: Server error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/res500'

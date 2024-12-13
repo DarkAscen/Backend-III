@@ -4,6 +4,7 @@ class UserManager {
     async getUsers(req, res){
         try {
             this.userService.getUsers(req, res);
+            return res.status(200).json({ message: "Users retrieved successfully" });
         } catch (error) {
             res.status(400).json({ error: "Error getting the users", details: error.message });
         }
@@ -15,7 +16,7 @@ class UserManager {
             if (!user) {
                 res.status(400).json({ error: "Error getting the user" });
             } else {
-                res.json(user);
+                return res.status(200).json({ message: "User retrieved successfully", user });
             }
         } catch (error) {
             res.status(400).json({ error: "Error getting the user", details: error.message });
@@ -48,7 +49,7 @@ class UserManager {
             const { first_name, last_name, email, age, password } = req.body;
 
             const user = await userService.updateUser(uid, { first_name, last_name, email, age, password });
-            res.json(user);
+            res.status(200).json({ message: "User updated successfully", user });
         } catch (error) {
             res.status(400).json({ error: "Error updating the user", details: error.message });
         }
@@ -57,7 +58,7 @@ class UserManager {
     async deleteUser(req, res){
         try {
             const user = await userService.deleteUser(req.params.uid);
-            res.json(user);
+            res.status(200).json({ message: "User deleted successfully", user });
         } catch (error) {
             res.status(400).json({ error: "Error deleting the user", details: error.message });
         }
